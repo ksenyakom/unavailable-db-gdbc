@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS event
+(
+    id BIGSERIAL PRIMARY KEY,
+    event_time TIMESTAMP NOT NULL
+    );
