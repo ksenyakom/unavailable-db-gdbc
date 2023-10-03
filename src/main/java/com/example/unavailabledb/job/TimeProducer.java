@@ -23,7 +23,7 @@ public class TimeProducer {
     }
 
     @Scheduled(fixedRateString = "${time.save.rate.milliseconds}")
-    private void runJob() {
+    public void runJob() {
         if (TIME_QUEUE.size() >= MAX_QUEUE_SIZE) {
             throw new IllegalStateException("Error. Internal storage is full, data will not be processed.");
         }

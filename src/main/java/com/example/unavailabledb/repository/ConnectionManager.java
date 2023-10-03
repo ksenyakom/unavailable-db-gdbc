@@ -13,15 +13,28 @@ import java.sql.SQLException;
 @Component
 public class ConnectionManager {
 
-    @Value("${database.url}")
-    private String dbUrl;
-    @Value("${database.username}")
-    private String user;
-    @Value("${database.password}")
-    private String pass;
-    @Value("${database.driver-class-name}")
-    private String dbDriver;
-    private static Connection connection;
+    private final String dbUrl;
+    private final String user;
+    private final String pass;
+    private final String dbDriver;
+
+    public ConnectionManager(@Value("${database.url}")
+                             String dbUrl,
+                             @Value("${database.username}")
+                             String user,
+                             @Value("${database.password}")
+                             String pass,
+                             @Value("${database.driver-class-name}")
+                             String dbDriver)
+
+    {
+        this.dbUrl = dbUrl;
+        this.user = user;
+        this.pass = pass;
+        this.dbDriver = dbDriver;
+    }
+
+    private Connection connection;
 
     public Connection getConnection() {
         if (!isConnectionValid()) {
@@ -31,7 +44,7 @@ public class ConnectionManager {
         return connection;
     }
 
-    public synchronized void getValidConnection() {
+    private synchronized void getValidConnection() {
         while (!isConnectionValid()) {
             connection = createConnection();
         }
@@ -76,6 +89,7 @@ public class ConnectionManager {
                 connection.close();
             }
         } catch (SQLException e) {
+            log.error("Error while destroy",e);
         }
     }
 }

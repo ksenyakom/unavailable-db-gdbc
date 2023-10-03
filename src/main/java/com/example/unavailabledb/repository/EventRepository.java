@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,9 @@ public class EventRepository {
             }
         } finally {
             try {
-                connection.setAutoCommit(true);
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
             } catch (SQLException e) {
                 log.error("Error", e);
             }
@@ -64,7 +65,7 @@ public class EventRepository {
             while (resultSet.next()) {
                 Event event = new Event();
                 event.setId(resultSet.getLong("id"));
-                event.setEventTime(ZonedDateTime.of(resultSet.getTimestamp("event_time").toLocalDateTime(), ZONE_ID));
+                event.setEventTime(resultSet.getTimestamp("event_time").toInstant().atZone(ZONE_ID));
                 list.add(event);
             }
         } catch (SQLException e) {
